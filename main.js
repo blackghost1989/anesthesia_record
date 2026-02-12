@@ -84,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         logVitals();
     });
+
+    // Initialize tab system
+    initTabs();
 }); // End DOMContentLoaded
 
 // --- Modal Helper ---
@@ -1250,8 +1253,8 @@ function rebuildFluidDatasets() {
     });
 }
 
-// --- Tab Switching Logic ---
-// --- Tab Switching Logic ---
+
+
 function initTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelector('.tab-content-wrapper')
@@ -1278,7 +1281,9 @@ function initTabs() {
         tabContents.forEach(c => c.classList.remove('active'));
 
         // If we were NOT closing the current tab, then open the NEW one
-        // (If we were closing it, we do nothing and leave everything closed -> 'Main Screen' view)
+        // And HIDE the persistent sections (Exclusive View)
+        // If we were NOT closing the current tab, then open the NEW one
+        // (Monitoring/Notes stay visible always)
         if (!isClosing) {
             tabBtns.forEach(b => {
                 if (b.dataset.tab === targetId) b.classList.add('active');
