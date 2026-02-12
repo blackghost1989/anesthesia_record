@@ -1,0 +1,690 @@
+:root {
+    --bg-color: #e5e5e5;
+    --card-bg: #ffffff;
+    --accent-color: #0056b3;
+    /* Strong Blue */
+    --text-main: #333;
+    --text-muted: #555;
+    --border-color: #999;
+    --header-bg: #2c3e50;
+    --header-text: #ecf0f1;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --header-height: 50px;
+    --radius: 4px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--bg-color);
+    color: var(--text-main);
+    font-size: 13px;
+}
+
+#app {
+    padding: 10px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.glass,
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius);
+}
+
+.app-header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 0 1rem;
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--radius);
+}
+
+.logo-section h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+}
+
+summary.card-header {
+    background: #ecf0f1;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem;
+}
+
+.card-header h2 {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+input,
+select,
+textarea {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 4px 6px;
+    font-size: 12px;
+    height: 28px;
+    box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--accent-color);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 4px rgba(0, 86, 179, 0.6);
+}
+
+button {
+    border-radius: 3px;
+    font-size: 12px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+    border: 1px solid #004494;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #333;
+}
+
+.btn-danger {
+    background: #c0392b;
+    color: white;
+    border: 1px solid #a93226;
+}
+
+.btn-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    background: #e0e0e0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #999;
+}
+
+/* Table Enhancements - Zebra Striping */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+th {
+    background: #34495e;
+    color: white;
+    padding: 6px;
+    text-align: left;
+    font-weight: normal;
+    border: 1px solid #2c3e50;
+}
+
+td {
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #e8f4fd;
+}
+
+/* Grid Form - Dense */
+/* Grid Form - Regular Alignment */
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    padding: 15px;
+}
+
+.grid-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+@media (max-width: 1024px) {
+    .grid-form {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Full Width Sections */
+.drug-and-fluid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    /* Removed gap for seamless collapsing */
+}
+
+/* Custom Modal (Dark Theme like Monitor Record) */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.custom-modal {
+    background: #1c1f26;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    text-align: center;
+    border: 2px solid #30363d;
+    color: #ffffff;
+}
+
+.custom-modal h3 {
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.custom-modal p {
+    color: #e6edf3;
+    margin-bottom: 1.5rem;
+}
+
+.custom-modal input {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+.custom-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.modal-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.modal-btn.confirm {
+    background: #dc3545;
+    /* Red for delete/action? Or primary. User liked delete style which was red */
+    color: white;
+}
+
+/* Wait, Monitor Record delete "Yes" was red (#dc3545). "No" was gray. */
+/* For "Edit", confirm should probably be Blue/Primary. */
+/* I will add a variant or logic in JS if needed, but CSS default .confirm can be blue, .danger red */
+
+.modal-btn.primary {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.modal-btn.danger {
+    background: #dc3545;
+    color: #fff;
+}
+
+/* History Table Scroll & Visibility */
+.history-table {
+    display: block;
+    /* Ensure visibility */
+    max-height: 350px;
+    /* Approx 10 rows */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.history-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: #34495e;
+}
+
+.history-table th {
+    /* Ensure header matches sticky background */
+    background: #34495e;
+}
+
+.modal-btn.cancel {
+    background: #6c757d;
+    color: white;
+}
+
+.drug-section,
+.epidural-section,
+.fluid-grid,
+.monitoring-chart,
+.case-info,
+.sidebar-details {
+    width: 100%;
+}
+
+/* Setup Checkbox Alignment */
+.checkbox-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 5px 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+
+/* Restored Input Styles */
+input,
+select,
+textarea {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 4px 6px;
+    font-size: 12px;
+    height: 28px;
+    box-sizing: border-box;
+}
+
+textarea {
+    min-height: 100px;
+    height: auto;
+    width: 100%;
+    resize: vertical;
+}
+
+/* Tighten spacing for collapsed sections */
+details:not([open]) {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+details[open] {
+    margin-bottom: 10px;
+}
+
+
+/* Chart Canvas Fix */
+.chart-scroll-container canvas {
+    min-height: 600px;
+    height: 100% !important;
+}
+
+/* Table Specific Inputs - Seamless */
+table input,
+table select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    height: 100%;
+    border-radius: 0;
+}
+
+table input:focus,
+table select:focus {
+    background: #fff;
+    box-shadow: none;
+    outline: 2px solid var(--accent-color);
+}
+
+.vital-inputs {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-end;
+    padding: 10px;
+    background: #eee;
+    border-top: 1px solid #ccc;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* Allow wrapping if screen is small */
+}
+
+.input-mini {
+    display: flex;
+    flex-direction: column;
+    /* Label on top of input */
+    align-items: center;
+    gap: 2px;
+}
+
+.input-mini input {
+    width: 60px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Header Actions */
+.actions {
+    display: flex;
+    gap: 5px;
+}
+
+/* Table Delete Button Alignment */
+table td:last-child {
+    text-align: right;
+    width: 1%;
+    /* Collapse to content width */
+    white-space: nowrap;
+}
+
+/* Header & Timer Styles */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header-left h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+}
+
+.time-display {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.anesthesia-timer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timer-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#timer-display {
+    font-size: 1.5rem;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--accent-color);
+    min-width: 120px;
+    text-align: center;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 8px;
+}
+
+/* Button overrides for timer */
+.timer-controls button {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+}
+
+/* Header & Timer Styles */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-self: start;
+}
+
+.header-left h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-self: end;
+}
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: auto;
+    align-items: stretch;
+    /* Ensure both boxes match width */
+}
+
+.anesthesia-timer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 15px;
+    /* Slightly reduced padding for stacking */
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: auto;
+    /* Removed min-width, let flex handle it */
+    display: flex;
+    justify-content: space-between;
+}
+
+.timer-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: right;
+    width: 120px;
+    /* Fixed width for label */
+}
+
+.timer-value {
+    /* Common class for both */
+    font-size: 1.5rem;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--accent-color);
+    min-width: 120px;
+    text-align: center;
+}
+
+#timer-display {
+    /* Reusing common style */
+}
+
+/* Specific for current time to match */
+#current-time-display {
+    /* Ensure it inherits or matches .timer-value properties if class is added */
+}
+
+.timer-controls {
+    display: flex;
+    gap: 8px;
+    width: 120px;
+    /* Fixed width to match label for perfect centering */
+    justify-content: flex-start;
+    /* Or center? */
+}
+
+/* --- Mobile Responsiveness --- */
+
+/* Scrollable Tables */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    /* Optional: adds definition */
+}
+
+@media (max-width: 768px) {
+
+    /* Stack Header */
+    .main-header {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .header-left,
+    .header-right,
+    .timer-container {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .header-left {
+        align-items: center;
+        /* Center title */
+    }
+
+    .header-right {
+        justify-content: center;
+        /* Center actions */
+        flex-wrap: wrap;
+    }
+
+    .anesthesia-timer {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Touch Targets */
+    button {
+        padding: 8px 16px;
+        min-height: 44px;
+        /* Apple UI Guideline */
+        font-size: 14px;
+    }
+
+    input,
+    select {
+        height: 40px;
+        /* Larger hit area */
+        font-size: 14px;
+    }
+
+    .vital-inputs {
+        gap: 15px;
+        /* More space between inputs */
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-form {
+        grid-template-columns: 1fr;
+    }
+
+    .header-left h1 {
+        font-size: 1.5rem;
+    }
+
+    .timer-value {
+        font-size: 1.2rem;
+        min-width: 100px;
+    }
+
+    .timer-label {
+        width: 100px;
+        font-size: 0.8rem;
+    }
+
+    .timer-controls,
+    .timer-controls button {
+        width: auto;
+    }
+
+    /* Ensure actions wrap if needed */
+    .actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
