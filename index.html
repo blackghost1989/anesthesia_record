@@ -64,11 +64,10 @@
 
                 <!-- Tab 1: Patient Info -->
                 <div id="tab-patient" class="tab-content">
-                    <details class="card glass case-info" open>
-                        <summary class="card-header">
+                    <div class="card glass case-info">
+                        <div class="card-header section-header">
                             <h2>個案資訊 Patient Info</h2>
-                            <span class="fold-icon"></span>
-                        </summary>
+                        </div>
                         <div class="card-content grid-form">
                             <div class="form-group">
                                 <label>Pet Name (寵物名字)</label>
@@ -123,16 +122,15 @@
                                 <input type="text" id="procedure" placeholder="Enter Procedure">
                             </div>
                         </div>
-                    </details>
+                    </div>
                 </div> <!-- End Tab 1 -->
 
                 <!-- Tab 2: Setup -->
                 <div id="tab-setup" class="tab-content">
-                    <details class="card glass setup-section" open>
-                        <summary class="card-header">
+                    <div class="card glass setup-section">
+                        <div class="card-header section-header">
                             <h2>設備設定 Setup</h2>
-                            <span class="fold-icon"></span>
-                        </summary>
+                        </div>
                         <div class="card-content grid-form">
                             <div class="checkbox-group">
                                 <label><input type="checkbox" id="setup-ventilator"> Ventilator</label>
@@ -163,19 +161,16 @@
                                 </div>
                             </div>
                         </div>
-                    </details>
-
-
-
+                    </div>
                 </div> <!-- End Tab 2 -->
 
                 <!-- Tab 3: Drug Management -->
                 <div id="tab-drug" class="tab-content">
-                    <details class="card glass drug-section" open>
-                        <summary class="card-header">
+                    <div class="card glass drug-section">
+                        <div class="card-header section-header">
                             <h2>藥物與常用量 Drug Management</h2>
                             <button id="add-drug" class="btn-icon">+</button>
-                        </summary>
+                        </div>
                         <div class="card-content table-container">
                             <table id="drug-table">
                                 <thead>
@@ -194,19 +189,16 @@
                                 </tbody>
                             </table>
                         </div>
-                    </details>
-
-
-
+                    </div>
                 </div> <!-- End Tab 3 -->
 
                 <!-- Tab 4: Epidural -->
                 <div id="tab-epidural" class="tab-content">
-                    <details class="card glass epidural-section" open>
-                        <summary class="card-header">
+                    <div class="card glass epidural-section">
+                        <div class="card-header section-header">
                             <h2>局部麻醉 Epidural / Block</h2>
                             <button id="add-epidural" class="btn-icon">+</button>
-                        </summary>
+                        </div>
                         <div class="card-content table-container">
                             <table id="epidural-table">
                                 <thead>
@@ -224,19 +216,16 @@
                                 </tbody>
                             </table>
                         </div>
-                    </details>
-
-
-
+                    </div>
                 </div> <!-- End Tab 4 -->
 
                 <!-- Tab 5: Fluids -->
                 <div id="tab-fluid" class="tab-content">
-                    <details class="card glass fluid-grid" open>
-                        <summary class="card-header">
+                    <div class="card glass fluid-grid">
+                        <div class="card-header section-header">
                             <h2>輸液與 CRI 記錄 Fluids & CRIs</h2>
                             <button id="add-fluid" class="btn-icon">+</button>
-                        </summary>
+                        </div>
                         <div class="card-content table-container">
                             <table id="fluid-table">
                                 <thead>
@@ -251,102 +240,101 @@
                                 </tbody>
                             </table>
                         </div>
-                    </details>
-                    </details>
-                </div> <!-- End Tab 5 -->
+                </div>
+            </div> <!-- End Tab 5 -->
 
-            </div> <!-- End Tab Content Wrapper -->
+    </div> <!-- End Tab Content Wrapper -->
 
-            <!-- Persistent Bottom Sections -->
-            <div class="persistent-sections">
-                <details class="card glass monitoring-chart" open>
-                    <summary class="card-header">
-                        <h2>生命徵象監控 Monitoring Record</h2>
-                    </summary>
-                    <div class="card-content">
-                        <div class="vital-inputs">
-                            <div class="input-mini">
-                                <label>SYS</label>
-                                <input type="number" id="input-sys" inputmode="numeric">
-                            </div>
-                            <div class="input-mini">
-                                <label>DIA</label>
-                                <input type="number" id="input-dia" inputmode="numeric">
-                            </div>
-                            <div class="input-mini">
-                                <label>PULSE</label>
-                                <input type="number" id="input-pulse" inputmode="numeric">
-                            </div>
-                            <div class="input-mini">
-                                <label>SpO2</label>
-                                <input type="number" id="input-spo2" inputmode="numeric">
-                            </div>
-                            <div class="input-mini">
-                                <label>ETCO2</label>
-                                <input type="number" id="input-etco2" inputmode="numeric">
-                            </div>
-                            <div class="input-mini">
-                                <label>BT</label>
-                                <input type="number" id="input-bt" inputmode="decimal" step="0.1">
-                            </div>
-                            <div class="input-mini">
-                                <label>RR</label>
-                                <input type="number" id="input-rr" inputmode="numeric">
-                            </div>
-                            <div class="input-mini">
-                                <label>ISO %</label>
-                                <input type="number" id="input-iso" inputmode="decimal" step="0.1">
-                            </div>
-                            <button id="log-vitals" class="btn-primary">LOG</button>
-                        </div>
-                        <div class="chart-wrapper">
-                            <div class="chart-scroll-container">
-                                <canvas id="vitalChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="table-container history-table">
-                            <table id="vitals-history">
-                                <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>SYS</th>
-                                        <th>DIA</th>
-                                        <th>MEAN</th>
-                                        <th>PULSE</th>
-                                        <th>SpO2</th>
-                                        <th>ETCO2</th>
-                                        <th>BT</th>
-                                        <th>Fluid Rate</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </details>
-
-                <!-- Section 6: Additional Info -->
-                <details class="card glass additional-info" open>
-                    <summary class="card-header">
-                        <h2>手 術 筆 記 Procedure Note</h2>
-                    </summary>
-                    <div class="card-content sidebar-details">
-                        <div class="card-section" style="grid-column: span 12;">
-                            <textarea id="procedure-note" rows="5"
-                                placeholder="Enter procedure notes and complications..."></textarea>
-                        </div>
-                    </div>
-                </details>
-                </details>
-            </div> <!-- End Persistent Sections -->
-        </main>
-
-        <footer class="app-footer">
-            <div class="actions">
-                <!-- Buttons removed as requested -->
+    <!-- Persistent Bottom Sections -->
+    <div class="persistent-sections">
+        <details class="card glass monitoring-chart" open>
+            <div class="card-header section-header">
+                <h2>生命徵象監控 Monitoring Record</h2>
             </div>
-        </footer>
+            <div class="card-content">
+                <div class="vital-inputs">
+                    <div class="input-mini">
+                        <label>SYS</label>
+                        <input type="number" id="input-sys" inputmode="numeric">
+                    </div>
+                    <div class="input-mini">
+                        <label>DIA</label>
+                        <input type="number" id="input-dia" inputmode="numeric">
+                    </div>
+                    <div class="input-mini">
+                        <label>PULSE</label>
+                        <input type="number" id="input-pulse" inputmode="numeric">
+                    </div>
+                    <div class="input-mini">
+                        <label>SpO2</label>
+                        <input type="number" id="input-spo2" inputmode="numeric">
+                    </div>
+                    <div class="input-mini">
+                        <label>ETCO2</label>
+                        <input type="number" id="input-etco2" inputmode="numeric">
+                    </div>
+                    <div class="input-mini">
+                        <label>BT</label>
+                        <input type="number" id="input-bt" inputmode="decimal" step="0.1">
+                    </div>
+                    <div class="input-mini">
+                        <label>RR</label>
+                        <input type="number" id="input-rr" inputmode="numeric">
+                    </div>
+                    <div class="input-mini">
+                        <label>ISO %</label>
+                        <input type="number" id="input-iso" inputmode="decimal" step="0.1">
+                    </div>
+                    <button id="log-vitals" class="btn-primary">LOG</button>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-scroll-container">
+                        <canvas id="vitalChart"></canvas>
+                    </div>
+                </div>
+                <div class="table-container history-table">
+                    <table id="vitals-history">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>SYS</th>
+                                <th>DIA</th>
+                                <th>MEAN</th>
+                                <th>PULSE</th>
+                                <th>SpO2</th>
+                                <th>ETCO2</th>
+                                <th>BT</th>
+                                <th>Fluid Rate</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
+
+        <!-- Section 6: Additional Info -->
+        <details class="card glass additional-info" open>
+            <div class="card-header section-header">
+                <h2>手 術 筆 記 Procedure Note</h2>
+            </div>
+            <div class="card-content sidebar-details">
+                <div class="card-section" style="grid-column: span 12;">
+                    <textarea id="procedure-note" rows="5"
+                        placeholder="Enter procedure notes and complications..."></textarea>
+                </div>
+            </div>
+        </details>
+        </details>
+    </div> <!-- End Persistent Sections -->
+    </main>
+
+    <footer class="app-footer">
+        <div class="actions">
+            <!-- Buttons removed as requested -->
+        </div>
+    </footer>
     </div>
 
     <!-- Confirm Modal -->

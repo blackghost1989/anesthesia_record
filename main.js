@@ -50,44 +50,7 @@ let timerStartTime = null;
 let timerElapsedTime = 0;
 let isTimerRunning = false;
 
-// --- Initialization ---
-document.addEventListener('DOMContentLoaded', () => {
-    populateSelects();
-    initChart();
-    updateTime();
-    setInterval(updateTime, 1000);
-
-    // Event Listeners
-    document.getElementById('add-drug').addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent details from flashing
-        addDrugRow();
-    });
-    document.getElementById('add-fluid').addEventListener('click', (e) => {
-        e.preventDefault();
-        addFluidRow();
-    });
-    document.getElementById('add-epidural').addEventListener('click', (e) => {
-        e.preventDefault();
-        addEpiduralRow();
-    });
-
-    // Timer Controls
-    const btnStart = document.getElementById('btn-start-case');
-    const btnEnd = document.getElementById('btn-end-case');
-    if (btnStart) btnStart.addEventListener('click', startTimer);
-    if (btnEnd) btnEnd.addEventListener('click', stopTimer);
-
-    // Initial Load
-    loadFromLocal();
-    loadTimerState();
-    document.getElementById('log-vitals').addEventListener('click', (e) => {
-        e.stopPropagation();
-        logVitals();
-    });
-
-    // Initialize tab system
-    initTabs();
-}); // End DOMContentLoaded
+// (First DOMContentLoaded removed — consolidated into second block below)
 
 // --- Modal Helper ---
 function showModal(title, content, onConfirm, showInput = false, inputValue = '') {
@@ -147,11 +110,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Initialize Chart
     initChart();
 
-    // 4. Load Data
-    loadFromLocal();
+    // 4. Time display
+    updateTime();
+    setInterval(updateTime, 1000);
 
-    // 5. Global Event Listeners
+    // 5. Load Data
+    loadFromLocal();
+    loadTimerState();
+
+    // 6. Global Event Listeners
     document.getElementById('log-vitals').addEventListener('click', logVitals);
+
+    // Add row buttons
+    document.getElementById('add-drug').addEventListener('click', (e) => { e.preventDefault(); addDrugRow(); });
+    document.getElementById('add-fluid').addEventListener('click', (e) => { e.preventDefault(); addFluidRow(); });
+    document.getElementById('add-epidural').addEventListener('click', (e) => { e.preventDefault(); addEpiduralRow(); });
+
+    // Timer Controls
+    const btnStart = document.getElementById('btn-start-case');
+    const btnEnd = document.getElementById('btn-end-case');
+    if (btnStart) btnStart.addEventListener('click', startTimer);
+    if (btnEnd) btnEnd.addEventListener('click', stopTimer);
+
+    // Tab system
+    initTabs();
 
 
 
@@ -460,6 +442,7 @@ loadFromLocal();
 function populateSelects() {
     // Age Y: 0-25
     const ageY = document.getElementById('age-y');
+    ageY.innerHTML = ''; // Clear first to prevent duplicates
     for (let i = 0; i <= 25; i++) {
         const opt = document.createElement('option');
         opt.value = i; opt.textContent = i;
@@ -467,6 +450,7 @@ function populateSelects() {
     }
     // Age M: 0-12
     const ageM = document.getElementById('age-m');
+    ageM.innerHTML = ''; // Clear first
     for (let i = 0; i <= 12; i++) {
         const opt = document.createElement('option');
         opt.value = i; opt.textContent = i;
@@ -474,6 +458,7 @@ function populateSelects() {
     }
     // ET Tube: none, 2.5 - 15 (0.5 steps)
     const etSize = document.getElementById('et-tube-size');
+    etSize.innerHTML = ''; // Clear first
     const noneOpt = document.createElement('option');
     noneOpt.value = 'none'; noneOpt.textContent = 'none';
     etSize.appendChild(noneOpt);
