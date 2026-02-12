@@ -24,6 +24,22 @@ body {
     background: var(--bg-color);
     color: var(--text-main);
     font-size: 13px;
+    /* Iframe Optimization - Auto Height */
+    min-height: 100%;
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    /* Let iframe handle scroll or expand */
+    -webkit-overflow-scrolling: touch;
+    /* iOS Scroll Fix */
+}
+
+html {
+    min-height: 100%;
+    height: auto;
+    width: 100%;
 }
 
 #app {
@@ -31,7 +47,9 @@ body {
     gap: 10px;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100%;
+    /* Better for iframes than vh */
+    width: 100%;
 }
 
 .glass,
@@ -59,10 +77,50 @@ body {
     color: white;
 }
 
+/* Unified Details/Summary Arrow */
+details>summary {
+    list-style: none;
+    /* Hide default marker */
+    cursor: pointer;
+    position: relative;
+}
+
+details>summary::-webkit-details-marker {
+    display: none;
+}
+
 summary.card-header {
     background: #ecf0f1;
     border-bottom: 1px solid var(--border-color);
     padding: 0.5rem;
+    padding-left: 30px;
+    /* Space for arrow */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Custom Arrow Icon */
+summary.card-header::after {
+    content: '▶';
+    /* Triangler arrow */
+    font-size: 0.8rem;
+    color: #555;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease;
+}
+
+details[open]>summary.card-header::after {
+    transform: translateY(-50%) rotate(90deg);
+}
+
+/* Remove old fold-icon if present in HTML (we are using ::after now) */
+.fold-icon {
+    display: none !important;
 }
 
 .card-header h2 {
@@ -633,7 +691,22 @@ table td:last-child {
 
     .anesthesia-timer {
         width: 100%;
-        justify-content: space-between;
+        flex-direction: column;
+        /* Stack buttons below */
+        gap: 10px;
+        align-items: center;
+    }
+
+    .timer-controls {
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .timer-controls button {
+        flex: 1;
+        /* Make buttons big and easy to hit */
+        max-width: 150px;
     }
 
     /* Touch Targets */
@@ -686,5 +759,207 @@ table td:last-child {
     .actions {
         flex-wrap: wrap;
         justify-content: center;
+    }
+}
+
+/* --- Mobile Card View for Data Tables (< 768px) --- */
+@media (max-width: 768px) {
+
+    /* Target specifically the input tables */
+    #drug-table,
+    #epidural-table {
+        border: 0;
+    }
+
+    #drug-table thead,
+    #epidural-table thead {
+        display: none;
+    }
+
+    #drug-table tr,
+    #epidural-table tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        padding: 10px;
+    }
+
+    #drug-table td,
+    #epidural-table td {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        /* Label : Input */
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid #eee;
+        padding: 8px 0;
+        text-align: left;
+    }
+
+    #drug-table td:last-child,
+    #epidural-table td:last-child {
+        border-bottom: 0;
+        display: flex;
+        justify-content: center;
+        /* Center the button */
+        padding-top: 10px;
+        width: 100%;
+        /* Ensure full width */
+    }
+
+    /* Add Labels via CSS */
+    #drug-table td::before,
+    #epidural-table td::before {
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    /* Drug Table Labels */
+    #drug-table td:nth-of-type(1)::before {
+        content: "Drug";
+    }
+
+    #drug-table td:nth-of-type(2)::before {
+        content: "Dose";
+    }
+
+    #drug-table td:nth-of-type(3)::before {
+        content: "Unit";
+    }
+
+    #drug-table td:nth-of-type(4)::before {
+        content: "Total";
+    }
+
+    #drug-table td:nth-of-type(5)::before {
+        content: "Route";
+    }
+
+    #drug-table td:nth-of-type(6)::before {
+        content: "Time";
+    }
+
+    #drug-table td:nth-of-type(7)::before {
+        content: "";
+        display: none;
+    }
+
+    /* --- Tabbed Interface Styles --- */
+    .tabs-nav-container {
+        margin-bottom: 0px;
+        padding: 0 5px;
+    }
+
+    .tabs-nav {
+        display: flex;
+        gap: 5px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .tab-btn {
+        padding: 10px 20px;
+        background: #e0e0e0;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: #555;
+        white-space: nowrap;
+        transition: background 0.2s, color 0.2s;
+        font-size: 14px;
+    }
+
+    .tab-btn:hover {
+        background: #ebebeb;
+    }
+
+    .tab-btn.active {
+        background: var(--accent-color);
+        color: white;
+        border-color: var(--accent-color);
+    }
+
+    .tab-content {
+        display: none;
+        animation: fadeIn 0.2s ease-in-out;
+        padding-top: 15px;
+        /* Spacing between tab and card */
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Hide default details styles inside tabs if desired, 
+   but user might still want collapsible cards inside tabs? 
+   Let's keep them collapsible but remove duplicate internal padding if needed. */
+
+    /* Ensure persistent sections have spacing */
+    .persistent-sections {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Action column has no label */
+
+    /* Epidural Table Labels */
+    #epidural-table td:nth-of-type(1)::before {
+        content: "Drug";
+    }
+
+    #epidural-table td:nth-of-type(2)::before {
+        content: "Dose";
+    }
+
+    #epidural-table td:nth-of-type(3)::before {
+        content: "Unit";
+    }
+
+    #epidural-table td:nth-of-type(4)::before {
+        content: "Total";
+    }
+
+    #epidural-table td:nth-of-type(5)::before {
+        content: "Route";
+    }
+
+    #epidural-table td:nth-of-type(6)::before {
+        content: "";
+        display: none;
+    }
+
+    /* Fix Input Sizes in Card View */
+    #drug-table input,
+    #drug-table select,
+    #epidural-table input,
+    #epidural-table select {
+        width: 100%;
+        border: 1px solid #ccc;
+        /* Restore border for visibility */
+        border-radius: 4px;
+        padding: 6px;
+        height: 36px;
+        background: #fdfdfd;
     }
 }

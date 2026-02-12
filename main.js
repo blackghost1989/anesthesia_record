@@ -1251,3 +1251,47 @@ function rebuildFluidDatasets() {
         colorIndex++;
     });
 }
+
+// --- Tab Switching Logic ---
+function initTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelector('.tab-content-wrapper')
+        ? document.querySelectorAll('.tab-content')
+        : [];
+
+    if (tabBtns.length === 0) {
+        console.warn('No tab buttons found');
+        return;
+    }
+
+    function activateTab(targetId) {
+        // console.log('Activating tab:', targetId);
+        tabBtns.forEach(b => {
+            if (b.dataset.tab === targetId) b.classList.add('active');
+            else b.classList.remove('active');
+        });
+        tabContents.forEach(c => {
+            if (c.id === targetId) c.classList.add('active');
+            else c.classList.remove('active');
+        });
+    }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent accidental form submission or focus jump
+            activateTab(btn.dataset.tab);
+        });
+    });
+
+    // Initialize first tab if none active
+    if (!document.querySelector('.tab-btn.active') && tabBtns.length > 0) {
+        activateTab(tabBtns[0].dataset.tab);
+    }
+}
+
+// Run immediately if DOM is ready (modules are deferred, so usually it is)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTabs);
+} else {
+    initTabs();
+}
