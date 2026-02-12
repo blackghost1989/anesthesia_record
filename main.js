@@ -84,21 +84,19 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         logVitals();
     });
-    document.getElementById('log-vitals').addEventListener('click', (e) => {
-        e.stopPropagation();
-        logVitals();
-    });
-    // --- Modal Helper ---
-    function showModal(title, content, onConfirm, showInput = false, inputValue = '') {
-        const overlay = document.createElement('div');
-        overlay.className = 'custom-modal-overlay';
+}); // End DOMContentLoaded
 
-        let inputHtml = '';
-        if (showInput) {
-            inputHtml = `<input type="number" id="modal-input" value="${inputValue}" step="any">`;
-        }
+// --- Modal Helper ---
+function showModal(title, content, onConfirm, showInput = false, inputValue = '') {
+    const overlay = document.createElement('div');
+    overlay.className = 'custom-modal-overlay';
 
-        overlay.innerHTML = `
+    let inputHtml = '';
+    if (showInput) {
+        inputHtml = `<input type="number" id="modal-input" value="${inputValue}" step="any">`;
+    }
+
+    overlay.innerHTML = `
         <div class="custom-modal">
             <h3>${title}</h3>
             ${content ? `<p style="margin-bottom:15px;">${content}</p>` : ''}
@@ -110,128 +108,58 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
-        document.body.appendChild(overlay);
+    document.body.appendChild(overlay);
 
-        const input = document.getElementById('modal-input');
-        if (input) input.focus();
+    const input = document.getElementById('modal-input');
+    if (input) input.focus();
 
-        const close = () => {
-            document.body.removeChild(overlay);
-        };
+    const close = () => {
+        document.body.removeChild(overlay);
+    };
 
-        document.getElementById('modal-confirm').addEventListener('click', () => {
-            const val = input ? input.value : null;
-            if (showInput && (val === null || val.trim() === '')) {
-                alert('Please enter a value');
-                return;
-            }
-            onConfirm(val);
-            close();
-        });
-
-        document.getElementById('modal-cancel').addEventListener('click', close);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) close();
-        });
-    }
-
-    // --- Initialization ---
-    document.addEventListener('DOMContentLoaded', () => {
-        // 1. Initialize Date
-        document.getElementById('date').valueAsDate = new Date();
-
-        // 2. Populate Selects
-        populateSelects();
-
-        // 3. Initialize Chart
-        initChart();
-
-        // 4. Load Data
-        loadFromLocal();
-
-        // 5. Global Event Listeners
-        document.getElementById('log-vitals').addEventListener('click', logVitals);
-
-
-
-        document.getElementById('export-json').addEventListener('click', () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(saveToLocal(true)));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `anesthesia_record_${getSafeDateString()}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        });
-
-        document.getElementById('export-pdf').addEventListener('click', async () => {
-            const doc = new jsPDF('p', 'mm', 'a4');
-            const sections = document.querySelectorAll('.card');
-            let yOffset = 10;
-
-            // Hide buttons for screenshot
-            document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = 'none');
-
-            const title = 'Anesthesia Monitoring Record';
-            doc.setFontSize(16);
-            doc.text(title, 105, yOffset, { align: 'center' });
-            yOffset += 10;
-
-            for (const section of sections) {
-                // Ensure details are open
-                const wasOpen = section.hasAttribute('open');
-                section.setAttribute('open', '');
-
-                await html2canvas(section, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = 190;
-                    const pageHeight = 295;
-                    const imgHeight = canvas.height * imgWidth / canvas.width;
-
-                    if (yOffset + imgHeight > pageHeight - 10) {
-                        doc.addPage();
-                        yOffset = 10;
-                    }
-
-                    doc.addImage(imgData, 'PNG', 10, yOffset, imgWidth, imgHeight);
-                    yOffset += imgHeight + 5;
-                });
-
-                if (!wasOpen) section.removeAttribute('open');
-            }
-
-            // Restore buttons
-            document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = '');
-
-            doc.save(`anesthesia_record_${getSafeDateString()}.pdf`);
-        });
+    document.getElementById('modal-confirm').addEventListener('click', () => {
+        const val = input ? input.value : null;
+        if (showInput && (val === null || val.trim() === '')) {
+            alert('Please enter a value');
+            return;
+        }
+        onConfirm(val);
+        close();
     });
-    function getSafeDateString() {
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        const hh = String(now.getHours()).padStart(2, '0');
-        const min = String(now.getMinutes()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd}_${hh}-${min}`;
-    }
+
+    document.getElementById('modal-cancel').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+    });
+}
+
+// --- Initialization ---
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialize Date
+    document.getElementById('date').valueAsDate = new Date();
+
+    // 2. Populate Selects
+    populateSelects();
+
+    // 3. Initialize Chart
+    initChart();
+
+    // 4. Load Data
+    loadFromLocal();
+
+    // 5. Global Event Listeners
+    document.getElementById('log-vitals').addEventListener('click', logVitals);
+
+
 
     document.getElementById('export-json').addEventListener('click', () => {
-        saveToLocal();
-        const saved = localStorage.getItem('anesthesia_data');
-        if (saved && saved !== '{}') {
-            const blob = new Blob([saved], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `anesthesia_record_${getSafeDateString()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        } else {
-            alert('No data to export.');
-        }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(saveToLocal(true)));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", `anesthesia_record_${getSafeDateString()}.json`);
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     });
 
     document.getElementById('export-pdf').addEventListener('click', async () => {
@@ -275,107 +203,177 @@ document.addEventListener('DOMContentLoaded', () => {
 
         doc.save(`anesthesia_record_${getSafeDateString()}.pdf`);
     });
-    document.getElementById('clear-data').addEventListener('click', () => {
-        showModal(
-            'Clear All Data?',
-            'This will permanently delete all logged data.',
-            () => {
-                localStorage.removeItem('anesthesia_data');
-                localStorage.removeItem('anesthesia_timer');
-                location.reload();
+});
+function getSafeDateString() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}_${hh}-${min}`;
+}
+
+document.getElementById('export-json').addEventListener('click', () => {
+    saveToLocal();
+    const saved = localStorage.getItem('anesthesia_data');
+    if (saved && saved !== '{}') {
+        const blob = new Blob([saved], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `anesthesia_record_${getSafeDateString()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } else {
+        alert('No data to export.');
+    }
+});
+
+document.getElementById('export-pdf').addEventListener('click', async () => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const sections = document.querySelectorAll('.card');
+    let yOffset = 10;
+
+    // Hide buttons for screenshot
+    document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = 'none');
+
+    const title = 'Anesthesia Monitoring Record';
+    doc.setFontSize(16);
+    doc.text(title, 105, yOffset, { align: 'center' });
+    yOffset += 10;
+
+    for (const section of sections) {
+        // Ensure details are open
+        const wasOpen = section.hasAttribute('open');
+        section.setAttribute('open', '');
+
+        await html2canvas(section, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 190;
+            const pageHeight = 295;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+
+            if (yOffset + imgHeight > pageHeight - 10) {
+                doc.addPage();
+                yOffset = 10;
             }
-        );
-    });
 
-    document.getElementById('cancel-clear').addEventListener('click', () => {
-        document.getElementById('confirm-modal').close();
-    });
+            doc.addImage(imgData, 'PNG', 10, yOffset, imgWidth, imgHeight);
+            yOffset += imgHeight + 5;
+        });
 
-    document.getElementById('confirm-clear').addEventListener('click', () => {
-        localStorage.removeItem('anesthesia_data');
-        location.reload();
-    });
+        if (!wasOpen) section.removeAttribute('open');
+    }
 
-    // ... existing helpers ...
-    // --- Delegated Table Listeners (Sync & Delete) ---
-    const tbody = document.querySelector('#vitals-history tbody');
-    if (tbody) {
-        tbody.addEventListener('change', (e) => {
-            const index = parseInt(e.target.getAttribute('data-index'));
-            const val = e.target.value === '' ? null : parseFloat(e.target.value);
+    // Restore buttons
+    document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = '');
 
-            if (e.target.classList.contains('vital-edit')) {
-                const field = e.target.getAttribute('data-field');
-                if (field) {
-                    vitalsData[field][index] = val;
+    doc.save(`anesthesia_record_${getSafeDateString()}.pdf`);
+});
+document.getElementById('clear-data').addEventListener('click', () => {
+    showModal(
+        'Clear All Data?',
+        'This will permanently delete all logged data.',
+        () => {
+            localStorage.removeItem('anesthesia_data');
+            localStorage.removeItem('anesthesia_timer');
+            location.reload();
+        }
+    );
+});
 
-                    // Recalculate Mean if Sys/Dia changed
-                    if (field === 'systolic' || field === 'diastolic') {
-                        const s = vitalsData.systolic[index];
-                        const d = vitalsData.diastolic[index];
-                        if (s !== null && d !== null) {
-                            vitalsData.mean[index] = Math.round(d + (s - d) / 3);
-                        } else {
-                            vitalsData.mean[index] = null;
-                        }
-                        updateVitalsHistoryTable();
+document.getElementById('cancel-clear').addEventListener('click', () => {
+    document.getElementById('confirm-modal').close();
+});
+
+document.getElementById('confirm-clear').addEventListener('click', () => {
+    localStorage.removeItem('anesthesia_data');
+    location.reload();
+});
+
+// ... existing helpers ...
+// --- Delegated Table Listeners (Sync & Delete) ---
+const tbody = document.querySelector('#vitals-history tbody');
+if (tbody) {
+    tbody.addEventListener('change', (e) => {
+        const index = parseInt(e.target.getAttribute('data-index'));
+        const val = e.target.value === '' ? null : parseFloat(e.target.value);
+
+        if (e.target.classList.contains('vital-edit')) {
+            const field = e.target.getAttribute('data-field');
+            if (field) {
+                vitalsData[field][index] = val;
+
+                // Recalculate Mean if Sys/Dia changed
+                if (field === 'systolic' || field === 'diastolic') {
+                    const s = vitalsData.systolic[index];
+                    const d = vitalsData.diastolic[index];
+                    if (s !== null && d !== null) {
+                        vitalsData.mean[index] = Math.round(d + (s - d) / 3);
+                    } else {
+                        vitalsData.mean[index] = null;
                     }
-                    refreshChart();
-                    saveToLocal();
+                    updateVitalsHistoryTable();
                 }
-            } else if (e.target.classList.contains('vital-edit-fluid')) {
-                const name = e.target.getAttribute('data-fluid-name');
-                if (!vitalsData.fluids[index]) vitalsData.fluids[index] = {};
-
-                if (val === null) {
-                    delete vitalsData.fluids[index][name];
-                } else {
-                    vitalsData.fluids[index][name] = val;
-                }
-
-                rebuildFluidDatasets();
                 refreshChart();
                 saveToLocal();
             }
-        });
+        } else if (e.target.classList.contains('vital-edit-fluid')) {
+            const name = e.target.getAttribute('data-fluid-name');
+            if (!vitalsData.fluids[index]) vitalsData.fluids[index] = {};
 
-        tbody.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-vital-btn')) {
-                e.stopPropagation();
-                e.preventDefault();
-                const index = parseInt(e.target.getAttribute('data-index'));
-
-                showModal(
-                    'Delete this record?',
-                    'Are you sure you want to delete this vital sign entry?',
-                    () => {
-                        // Remove data at index for all arrays
-                        vitalsData.times.splice(index, 1);
-                        vitalsData.systolic.splice(index, 1);
-                        vitalsData.diastolic.splice(index, 1);
-                        vitalsData.mean.splice(index, 1);
-                        vitalsData.pulse.splice(index, 1);
-                        vitalsData.spo2.splice(index, 1);
-                        vitalsData.etco2.splice(index, 1);
-                        vitalsData.bt.splice(index, 1);
-                        vitalsData.rr.splice(index, 1);
-                        vitalsData.iso.splice(index, 1);
-                        vitalsData.fluids.splice(index, 1);
-
-                        // Re-sync Fluid Datasets
-                        chart.data.datasets.forEach(ds => {
-                            ds.data.splice(index, 1);
-                        });
-
-                        updateVitalsHistoryTable();
-                        refreshChart();
-                        saveToLocal();
-                    }
-                );
+            if (val === null) {
+                delete vitalsData.fluids[index][name];
+            } else {
+                vitalsData.fluids[index][name] = val;
             }
-        });
-    }
-});
+
+            rebuildFluidDatasets();
+            refreshChart();
+            saveToLocal();
+        }
+    });
+
+    tbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-vital-btn')) {
+            e.stopPropagation();
+            e.preventDefault();
+            const index = parseInt(e.target.getAttribute('data-index'));
+
+            showModal(
+                'Delete this record?',
+                'Are you sure you want to delete this vital sign entry?',
+                () => {
+                    // Remove data at index for all arrays
+                    vitalsData.times.splice(index, 1);
+                    vitalsData.systolic.splice(index, 1);
+                    vitalsData.diastolic.splice(index, 1);
+                    vitalsData.mean.splice(index, 1);
+                    vitalsData.pulse.splice(index, 1);
+                    vitalsData.spo2.splice(index, 1);
+                    vitalsData.etco2.splice(index, 1);
+                    vitalsData.bt.splice(index, 1);
+                    vitalsData.rr.splice(index, 1);
+                    vitalsData.iso.splice(index, 1);
+                    vitalsData.fluids.splice(index, 1);
+
+                    // Re-sync Fluid Datasets
+                    chart.data.datasets.forEach(ds => {
+                        ds.data.splice(index, 1);
+                    });
+
+                    updateVitalsHistoryTable();
+                    refreshChart();
+                    saveToLocal();
+                }
+            );
+        }
+    });
+}
+
 
 // ... existing helpers ...
 
@@ -1253,6 +1251,7 @@ function rebuildFluidDatasets() {
 }
 
 // --- Tab Switching Logic ---
+// --- Tab Switching Logic ---
 function initTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelector('.tab-content-wrapper')
@@ -1265,28 +1264,43 @@ function initTabs() {
     }
 
     function activateTab(targetId) {
-        // console.log('Activating tab:', targetId);
+        let isClosing = false;
+
+        // Check if we are closing the currently active tab
         tabBtns.forEach(b => {
-            if (b.dataset.tab === targetId) b.classList.add('active');
-            else b.classList.remove('active');
+            if (b.dataset.tab === targetId && b.classList.contains('active')) {
+                isClosing = true;
+            }
         });
-        tabContents.forEach(c => {
-            if (c.id === targetId) c.classList.add('active');
-            else c.classList.remove('active');
-        });
+
+        // Close all tabs first (RESET state)
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+
+        // If we were NOT closing the current tab, then open the NEW one
+        // (If we were closing it, we do nothing and leave everything closed -> 'Main Screen' view)
+        if (!isClosing) {
+            tabBtns.forEach(b => {
+                if (b.dataset.tab === targetId) b.classList.add('active');
+            });
+            tabContents.forEach(c => {
+                if (c.id === targetId) c.classList.add('active');
+            });
+        }
     }
 
     tabBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent accidental form submission or focus jump
+        // Clone button to remove old listeners if any (though init runs once usually)
+        // Or just use a flag? Safer to rely on clean DOM or just one listener.
+        // Since we are replacing the function, just add listener.
+        btn.onclick = (e) => { // using onclick to override any previous listeners if simple
+            e.preventDefault();
             activateTab(btn.dataset.tab);
-        });
+        };
     });
 
-    // Initialize first tab if none active
-    if (!document.querySelector('.tab-btn.active') && tabBtns.length > 0) {
-        activateTab(tabBtns[0].dataset.tab);
-    }
+    // Default: Ensure NO tab is active initially (matches HTML)
+    // We do NOT auto-activate the first tab anymore.
 }
 
 // Run immediately if DOM is ready (modules are deferred, so usually it is)
