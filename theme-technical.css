@@ -1,16 +1,16 @@
 :root {
-    --bg-color: #e5e5e5;
-    --card-bg: #ffffff;
-    --accent-color: #0056b3;
-    /* Strong Blue */
-    --text-main: #333;
-    --text-muted: #555;
-    --border-color: #999;
-    --header-bg: #2c3e50;
-    --header-text: #ecf0f1;
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --bg-color: #f5f5ef;
+    --card-bg: #fafaf5;
+    --accent-color: #4d7c5e;
+    /* Sage Green */
+    --text-main: #374151;
+    --text-muted: #6b7280;
+    --border-color: #c5c9b8;
+    --header-bg: #2d4a37;
+    --header-text: #f0ede6;
+    --font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --header-height: 50px;
-    --radius: 4px;
+    --radius: 6px;
 }
 
 * {
@@ -56,7 +56,7 @@ html {
 .card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 4px rgba(45, 74, 55, 0.1);
     border-radius: var(--radius);
 }
 
@@ -90,7 +90,7 @@ details>summary::-webkit-details-marker {
 }
 
 summary.card-header {
-    background: #ecf0f1;
+    background: #eceee6;
     border-bottom: 1px solid var(--border-color);
     padding: 0.5rem;
     padding-left: 30px;
@@ -106,7 +106,7 @@ summary.card-header::after {
     content: '▶';
     /* Triangler arrow */
     font-size: 0.8rem;
-    color: #555;
+    color: #6b7280;
     position: absolute;
     left: 10px;
     top: 50%;
@@ -142,9 +142,9 @@ details[open]>summary.card-header::after {
 .tab-btn {
     flex-shrink: 0;
     padding: 6px 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #f5f5f5;
+    border: 1px solid #c5c9b8;
+    border-radius: 6px;
+    background: #eceee6;
     cursor: pointer;
     font-size: 12px;
     font-weight: 500;
@@ -153,7 +153,7 @@ details[open]>summary.card-header::after {
 }
 
 .tab-btn:hover {
-    background: #e0e0e0;
+    background: #dde0d5;
 }
 
 .tab-btn.active {
@@ -185,7 +185,7 @@ details[open]>summary.card-header::after {
 }
 
 .card-header h2 {
-    color: #2c3e50;
+    color: #2d4a37;
     font-weight: 700;
     font-size: 0.85rem;
     margin: 0;
@@ -195,7 +195,7 @@ input,
 select,
 textarea {
     background: #fff;
-    border: 1px solid #ccc;
+    border: 1px solid #c5c9b8;
     border-radius: 2px;
     padding: 4px 6px;
     font-size: 12px;
@@ -206,7 +206,7 @@ textarea {
 input:focus,
 select:focus {
     border-color: var(--accent-color);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 4px rgba(0, 86, 179, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 4px rgba(77, 124, 94, 0.4);
 }
 
 button {
@@ -220,12 +220,12 @@ button {
 .btn-primary {
     background: var(--accent-color);
     color: white;
-    border: 1px solid #004494;
+    border: 1px solid #3a6349;
 }
 
 .btn-secondary {
     background: #f8f9fa;
-    border: 1px solid #ced4da;
+    border: 1px solid #c5c9b8;
     color: #333;
 }
 
@@ -239,12 +239,12 @@ button {
     width: 20px;
     height: 20px;
     border-radius: 3px;
-    background: #e0e0e0;
-    color: #333;
+    background: #eceee6;
+    color: #374151;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #999;
+    border: 1px solid #c5c9b8;
 }
 
 /* Table Enhancements - Zebra Striping */
@@ -255,12 +255,12 @@ table {
 }
 
 th {
-    background: #34495e;
+    background: #2d4a37;
     color: white;
     padding: 6px;
     text-align: left;
     font-weight: normal;
-    border: 1px solid #2c3e50;
+    border: 1px solid #243d2e;
 }
 
 td {
@@ -269,11 +269,11 @@ td {
 }
 
 tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
+    background-color: #f7f7f2;
 }
 
 tbody tr:hover {
-    background-color: #e8f4fd;
+    background-color: #e8f0e8;
 }
 
 /* Grid Form - Dense */
@@ -410,12 +410,12 @@ tbody tr:hover {
     position: sticky;
     top: 0;
     z-index: 5;
-    background: #34495e;
+    background: #2d4a37;
 }
 
 .history-table th {
     /* Ensure header matches sticky background */
-    background: #34495e;
+    background: #2d4a37;
 }
 
 .modal-btn.cancel {
@@ -453,7 +453,7 @@ input,
 select,
 textarea {
     background: #fff;
-    border: 1px solid #ccc;
+    border: 1px solid #c5c9b8;
     border-radius: 2px;
     padding: 4px 6px;
     font-size: 12px;
@@ -502,32 +502,121 @@ table select:focus {
     outline: 2px solid var(--accent-color);
 }
 
-.vital-inputs {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: flex-end;
-    padding: 10px;
-    background: #eee;
-    border-top: 1px solid #ccc;
-    justify-content: center;
-    flex-wrap: wrap;
-    /* Allow wrapping if screen is small */
+/* === Dashboard Layout: Monitoring Section === */
+.monitoring-dashboard {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 15px;
+    padding: 15px;
+    min-height: 500px;
 }
 
-.input-mini {
+.chart-panel {
+    min-width: 0;
+    /* Prevent grid blowout */
+}
+
+.chart-panel .chart-scroll-container canvas {
+    min-height: 450px;
+}
+
+.vital-cards-panel {
     display: flex;
     flex-direction: column;
-    /* Label on top of input */
-    align-items: center;
-    gap: 2px;
+    gap: 10px;
 }
 
-.input-mini input {
-    width: 60px;
+.vital-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex: 1;
+}
+
+.vital-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: box-shadow 0.2s ease;
+}
+
+.vital-card:hover {
+    box-shadow: 0 2px 8px rgba(45, 74, 55, 0.15);
+}
+
+.vital-card label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vital-display {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    line-height: 1.1;
+    min-height: 2rem;
+}
+
+.vital-card input {
+    width: 100%;
     text-align: center;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 13px;
+    height: 28px;
+    border: 1px solid #dde0d5;
+    border-radius: 4px;
+    background: #f7f7f2;
+}
+
+.vital-card input:focus {
+    background: #fff;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(77, 124, 94, 0.2);
+}
+
+.vital-card input::placeholder {
+    color: #b5b8ad;
+    font-weight: 400;
+    font-size: 11px;
+}
+
+.btn-log {
+    padding: 10px 20px;
     font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+/* Mobile: stack chart and cards vertically */
+@media (max-width: 900px) {
+    .monitoring-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .vital-cards-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .vital-display {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .vital-cards-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 /* Header Actions */
@@ -925,20 +1014,20 @@ table td:last-child {
 
     .tab-btn {
         padding: 10px 20px;
-        background: #e0e0e0;
-        border: 1px solid #ccc;
+        background: #eceee6;
+        border: 1px solid #c5c9b8;
         border-bottom: none;
         border-radius: 8px 8px 0 0;
         cursor: pointer;
         font-weight: 600;
-        color: #555;
+        color: #6b7280;
         white-space: nowrap;
         transition: background 0.2s, color 0.2s;
         font-size: 14px;
     }
 
     .tab-btn:hover {
-        background: #ebebeb;
+        background: #dde0d5;
     }
 
     .tab-btn.active {

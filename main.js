@@ -713,6 +713,29 @@ function logVitals() {
         ['input-sys', 'input-dia', 'input-pulse', 'input-spo2', 'input-etco2', 'input-bt', 'input-rr', 'input-iso'].forEach(id => {
             document.getElementById(id).value = '';
         });
+
+        // Update vital card displays with logged values
+        updateVitalDisplays();
+    }
+}
+
+function updateVitalDisplays() {
+    const len = vitalsData.times.length;
+    if (len === 0) return;
+    const last = len - 1;
+    const map = {
+        'display-sys': vitalsData.systolic[last],
+        'display-dia': vitalsData.diastolic[last],
+        'display-pulse': vitalsData.pulse[last],
+        'display-spo2': vitalsData.spo2[last],
+        'display-etco2': vitalsData.etco2[last],
+        'display-bt': vitalsData.bt[last],
+        'display-rr': vitalsData.rr[last],
+        'display-iso': vitalsData.iso[last],
+    };
+    for (const [id, val] of Object.entries(map)) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val !== null && val !== undefined ? val : '--';
     }
 }
 
@@ -1087,6 +1110,7 @@ function loadFromLocal() {
             rebuildFluidDatasets(); // Restore fluid datasets
             refreshChart();
             updateVitalsHistoryTable();
+            updateVitalDisplays();
         }
         if (data.rr) {
             vitalsData.rr = data.rr;

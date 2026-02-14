@@ -240,101 +240,120 @@
                                 </tbody>
                             </table>
                         </div>
-                </div>
-            </div> <!-- End Tab 5 -->
+                    </div>
+                </div> <!-- End Tab 5 -->
 
-    </div> <!-- End Tab Content Wrapper -->
+            </div> <!-- End Tab Content Wrapper -->
 
-    <!-- Persistent Bottom Sections -->
-    <div class="persistent-sections">
-        <details class="card glass monitoring-chart" open>
-            <div class="card-header section-header">
-                <h2>生命徵象監控 Monitoring Record</h2>
-            </div>
-            <div class="card-content">
-                <div class="vital-inputs">
-                    <div class="input-mini">
-                        <label>SYS</label>
-                        <input type="number" id="input-sys" inputmode="numeric">
+            <!-- Persistent Bottom Sections -->
+            <div class="persistent-sections">
+                <details class="card glass monitoring-chart" open>
+                    <div class="card-header section-header">
+                        <h2>生命徵象監控 Monitoring Record</h2>
                     </div>
-                    <div class="input-mini">
-                        <label>DIA</label>
-                        <input type="number" id="input-dia" inputmode="numeric">
+                    <div class="card-content">
+                        <!-- Dashboard Grid: Chart Left + Vital Cards Right -->
+                        <div class="monitoring-dashboard">
+                            <div class="chart-panel">
+                                <div class="chart-wrapper">
+                                    <div class="chart-scroll-container">
+                                        <canvas id="vitalChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vital-cards-panel">
+                                <div class="vital-cards-grid">
+                                    <div class="vital-card">
+                                        <label>SYS</label>
+                                        <span class="vital-display" id="display-sys">--</span>
+                                        <input type="number" id="input-sys" inputmode="numeric" placeholder="mmHg">
+                                    </div>
+                                    <div class="vital-card">
+                                        <label>DIA</label>
+                                        <span class="vital-display" id="display-dia">--</span>
+                                        <input type="number" id="input-dia" inputmode="numeric" placeholder="mmHg">
+                                    </div>
+                                    <div class="vital-card">
+                                        <label>PULSE</label>
+                                        <span class="vital-display" id="display-pulse">--</span>
+                                        <input type="number" id="input-pulse" inputmode="numeric" placeholder="bpm">
+                                    </div>
+                                    <div class="vital-card">
+                                        <label>SpO2</label>
+                                        <span class="vital-display" id="display-spo2">--</span>
+                                        <input type="number" id="input-spo2" inputmode="numeric" placeholder="%">
+                                    </div>
+                                    <div class="vital-card">
+                                        <label>ETCO2</label>
+                                        <span class="vital-display" id="display-etco2">--</span>
+                                        <input type="number" id="input-etco2" inputmode="numeric" placeholder="mmHg">
+                                    </div>
+                                    <div class="vital-card">
+                                        <label>BT</label>
+                                        <span class="vital-display" id="display-bt">--</span>
+                                        <input type="number" id="input-bt" inputmode="decimal" step="0.1"
+                                            placeholder="°C">
+                                    </div>
+                                    <div class="vital-card">
+                                        <label>RR</label>
+                                        <span class="vital-display" id="display-rr">--</span>
+                                        <input type="number" id="input-rr" inputmode="numeric" placeholder="rpm">
+                                    </div>
+                                    <div class="vital-card">
+                                        <label>ISO %</label>
+                                        <span class="vital-display" id="display-iso">--</span>
+                                        <input type="number" id="input-iso" inputmode="decimal" step="0.1"
+                                            placeholder="%">
+                                    </div>
+                                </div>
+                                <button id="log-vitals" class="btn-primary btn-log">LOG</button>
+                            </div>
+                        </div>
+                        <!-- History Table (full width) -->
+                        <div class="table-container history-table">
+                            <table id="vitals-history">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>SYS</th>
+                                        <th>DIA</th>
+                                        <th>MEAN</th>
+                                        <th>PULSE</th>
+                                        <th>SpO2</th>
+                                        <th>ETCO2</th>
+                                        <th>BT</th>
+                                        <th>RR</th>
+                                        <th>ISO %</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="input-mini">
-                        <label>PULSE</label>
-                        <input type="number" id="input-pulse" inputmode="numeric">
-                    </div>
-                    <div class="input-mini">
-                        <label>SpO2</label>
-                        <input type="number" id="input-spo2" inputmode="numeric">
-                    </div>
-                    <div class="input-mini">
-                        <label>ETCO2</label>
-                        <input type="number" id="input-etco2" inputmode="numeric">
-                    </div>
-                    <div class="input-mini">
-                        <label>BT</label>
-                        <input type="number" id="input-bt" inputmode="decimal" step="0.1">
-                    </div>
-                    <div class="input-mini">
-                        <label>RR</label>
-                        <input type="number" id="input-rr" inputmode="numeric">
-                    </div>
-                    <div class="input-mini">
-                        <label>ISO %</label>
-                        <input type="number" id="input-iso" inputmode="decimal" step="0.1">
-                    </div>
-                    <button id="log-vitals" class="btn-primary">LOG</button>
-                </div>
-                <div class="chart-wrapper">
-                    <div class="chart-scroll-container">
-                        <canvas id="vitalChart"></canvas>
-                    </div>
-                </div>
-                <div class="table-container history-table">
-                    <table id="vitals-history">
-                        <thead>
-                            <tr>
-                                <th>Time</th>
-                                <th>SYS</th>
-                                <th>DIA</th>
-                                <th>MEAN</th>
-                                <th>PULSE</th>
-                                <th>SpO2</th>
-                                <th>ETCO2</th>
-                                <th>BT</th>
-                                <th>Fluid Rate</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </details>
+                </details>
 
-        <!-- Section 6: Additional Info -->
-        <details class="card glass additional-info" open>
-            <div class="card-header section-header">
-                <h2>手 術 筆 記 Procedure Note</h2>
-            </div>
-            <div class="card-content sidebar-details">
-                <div class="card-section" style="grid-column: span 12;">
-                    <textarea id="procedure-note" rows="5"
-                        placeholder="Enter procedure notes and complications..."></textarea>
-                </div>
-            </div>
-        </details>
-        </details>
-    </div> <!-- End Persistent Sections -->
-    </main>
+                <!-- Section 6: Additional Info -->
+                <details class="card glass additional-info" open>
+                    <div class="card-header section-header">
+                        <h2>手 術 筆 記 Procedure Note</h2>
+                    </div>
+                    <div class="card-content sidebar-details">
+                        <div class="card-section" style="grid-column: span 12;">
+                            <textarea id="procedure-note" rows="5"
+                                placeholder="Enter procedure notes and complications..."></textarea>
+                        </div>
+                    </div>
+                </details>
+                </details>
+            </div> <!-- End Persistent Sections -->
+        </main>
 
-    <footer class="app-footer">
-        <div class="actions">
-            <!-- Buttons removed as requested -->
-        </div>
-    </footer>
+        <footer class="app-footer">
+            <div class="actions">
+                <!-- Buttons removed as requested -->
+            </div>
+        </footer>
     </div>
 
     <!-- Confirm Modal -->
