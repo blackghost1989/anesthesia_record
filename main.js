@@ -37,10 +37,10 @@ const vitalsData = {
     pulse: [],
     etco2: [],
     spo2: [],
-    spo2: [],
     bt: [],
-    iso: [],
     rr: [],
+    o2: [],
+    iso: [],
     fluids: [] // Array of objects: [{name: 'fluid1', rate: 100}, ...]
 };
 
@@ -147,48 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadAnchorNode.remove();
     });
 
-    document.getElementById('export-pdf').addEventListener('click', async () => {
-        const doc = new jsPDF('p', 'mm', 'a4');
-        const sections = document.querySelectorAll('.card');
-        let yOffset = 10;
-
-        // Hide buttons for screenshot
-        document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = 'none');
-
-        const title = 'Anesthesia Monitoring Record';
-        doc.setFontSize(16);
-        doc.text(title, 105, yOffset, { align: 'center' });
-        yOffset += 10;
-
-        for (const section of sections) {
-            // Ensure details are open
-            const wasOpen = section.hasAttribute('open');
-            section.setAttribute('open', '');
-
-            await html2canvas(section, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 190;
-                const pageHeight = 295;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-
-                if (yOffset + imgHeight > pageHeight - 10) {
-                    doc.addPage();
-                    yOffset = 10;
-                }
-
-                doc.addImage(imgData, 'PNG', 10, yOffset, imgWidth, imgHeight);
-                yOffset += imgHeight + 5;
-            });
-
-            if (!wasOpen) section.removeAttribute('open');
-        }
-
-        // Restore buttons
-        document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = '');
-
-        doc.save(`anesthesia_record_${getSafeDateString()}.pdf`);
-    });
+    document.getElementById('export-pdf').addEventListener('click', exportPDF);
 });
+
 function getSafeDateString() {
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -217,47 +178,7 @@ document.getElementById('export-json').addEventListener('click', () => {
     }
 });
 
-document.getElementById('export-pdf').addEventListener('click', async () => {
-    const doc = new jsPDF('p', 'mm', 'a4');
-    const sections = document.querySelectorAll('.card');
-    let yOffset = 10;
 
-    // Hide buttons for screenshot
-    document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = 'none');
-
-    const title = 'Anesthesia Monitoring Record';
-    doc.setFontSize(16);
-    doc.text(title, 105, yOffset, { align: 'center' });
-    yOffset += 10;
-
-    for (const section of sections) {
-        // Ensure details are open
-        const wasOpen = section.hasAttribute('open');
-        section.setAttribute('open', '');
-
-        await html2canvas(section, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 190;
-            const pageHeight = 295;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-
-            if (yOffset + imgHeight > pageHeight - 10) {
-                doc.addPage();
-                yOffset = 10;
-            }
-
-            doc.addImage(imgData, 'PNG', 10, yOffset, imgWidth, imgHeight);
-            yOffset += imgHeight + 5;
-        });
-
-        if (!wasOpen) section.removeAttribute('open');
-    }
-
-    // Restore buttons
-    document.querySelectorAll('button, .header-actions, .actions').forEach(el => el.style.display = '');
-
-    doc.save(`anesthesia_record_${getSafeDateString()}.pdf`);
-});
 document.getElementById('clear-data').addEventListener('click', () => {
     showModal(
         'Clear All Data?',
@@ -342,6 +263,7 @@ if (tbody) {
                     vitalsData.etco2.splice(index, 1);
                     vitalsData.bt.splice(index, 1);
                     vitalsData.rr.splice(index, 1);
+                    vitalsData.o2.splice(index, 1);
                     vitalsData.iso.splice(index, 1);
                     vitalsData.fluids.splice(index, 1);
 
@@ -382,29 +304,44 @@ function exportData() {
 
 async function exportPDF() {
     const doc = new jsPDF('p', 'mm', 'a4');
-    const sections = document.querySelectorAll('.card');
     let yOffset = 10;
 
-    // Temporarily hide buttons and apply print styles
+    // Temporarily hide buttons
     const buttons = document.querySelectorAll('button, .header-actions, .actions');
     buttons.forEach(el => el.style.display = 'none');
+
+    // Temporarily show ALL tab content so html2canvas can render them
+    const tabContents = document.querySelectorAll('.tab-content');
+    const originalDisplay = [];
+    tabContents.forEach(tc => {
+        originalDisplay.push(tc.style.display);
+        tc.style.display = 'block';
+    });
 
     const title = 'Anesthesia Monitoring Record';
     doc.setFontSize(16);
     doc.text(title, 105, yOffset, { align: 'center' });
     yOffset += 10;
 
+    // 1. Capture all .card sections EXCEPT the monitoring card (which has the chart)
+    const sections = document.querySelectorAll('.card');
     for (const section of sections) {
-        // Ensure details are open for capture
+        // Skip the monitoring section — we'll handle chart + table separately
+        if (section.querySelector('.monitoring-dashboard')) {
+            continue;
+        }
+
         const wasOpen = section.hasAttribute('open');
         section.setAttribute('open', '');
 
-        // Use white background to prevent transparent/black PDF issues
-        await html2canvas(section, {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: '#ffffff'
-        }).then(canvas => {
+        try {
+            const canvas = await html2canvas(section, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            });
+            if (canvas.width === 0 || canvas.height === 0) continue;
+
             const imgData = canvas.toDataURL('image/png');
             const imgWidth = 190;
             const pageHeight = 295;
@@ -417,15 +354,67 @@ async function exportPDF() {
 
             doc.addImage(imgData, 'PNG', 10, yOffset, imgWidth, imgHeight);
             yOffset += imgHeight + 5;
-        }).catch(err => console.error('Canvas error:', err));
+        } catch (err) {
+            console.error('Canvas error:', err);
+        }
 
         if (!wasOpen) section.removeAttribute('open');
     }
 
+    // 2. Add chart directly from Chart.js (bypasses html2canvas canvas issues)
+    if (chart) {
+        doc.addPage();
+        yOffset = 10;
+        doc.setFontSize(14);
+        doc.text('Vital Signs Chart', 105, yOffset, { align: 'center' });
+        yOffset += 8;
+
+        const chartImg = chart.toBase64Image('image/png', 1);
+        const chartCanvas = document.getElementById('vitalChart');
+        const chartAspect = chartCanvas.height / chartCanvas.width;
+        const chartImgWidth = 190;
+        const chartImgHeight = chartImgWidth * chartAspect;
+
+        doc.addImage(chartImg, 'PNG', 10, yOffset, chartImgWidth, chartImgHeight);
+        yOffset += chartImgHeight + 5;
+    }
+
+    // 3. Capture the history table via html2canvas
+    const historyTable = document.querySelector('.history-table');
+    if (historyTable) {
+        try {
+            const tableCanvas = await html2canvas(historyTable, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            });
+            if (tableCanvas.width > 0 && tableCanvas.height > 0) {
+                const imgData = tableCanvas.toDataURL('image/png');
+                const imgWidth = 190;
+                const imgHeight = tableCanvas.height * imgWidth / tableCanvas.width;
+                const pageHeight = 295;
+
+                if (yOffset + imgHeight > pageHeight - 10) {
+                    doc.addPage();
+                    yOffset = 10;
+                }
+                doc.addImage(imgData, 'PNG', 10, yOffset, imgWidth, imgHeight);
+                yOffset += imgHeight + 5;
+            }
+        } catch (err) {
+            console.error('History table error:', err);
+        }
+    }
+
+    // Restore tab visibility
+    tabContents.forEach((tc, i) => {
+        tc.style.display = originalDisplay[i];
+    });
+
     // Restore buttons
     buttons.forEach(el => el.style.display = '');
 
-    doc.save(`anesthesia_record_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`anesthesia_record_${getSafeDateString()}.pdf`);
 }
 document.addEventListener('change', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
@@ -493,6 +482,7 @@ function initChart() {
                 { label: 'ETCO2', data: vitalsData.etco2, borderColor: '#9b59b6', pointStyle: 'crossRot', borderWidth: 2, tension: 0.1, spanGaps: true, yAxisID: 'y' },
                 { label: 'BT', data: vitalsData.bt, borderColor: '#34495e', pointStyle: 'rect', borderWidth: 2, tension: 0.1, spanGaps: true, yAxisID: 'y' },
                 { label: 'RR', data: vitalsData.rr, borderColor: '#00bcd4', pointStyle: 'cross', borderWidth: 2, tension: 0.1, spanGaps: true, yAxisID: 'y' },
+                { label: 'O2', data: vitalsData.o2, borderColor: '#ff9800', pointStyle: 'rectRot', borderWidth: 2, tension: 0.1, spanGaps: true, yAxisID: 'yFluid' },
                 { label: 'ISO', data: vitalsData.iso, borderColor: '#e67e22', pointStyle: 'circle', borderWidth: 2, tension: 0.1, spanGaps: true, yAxisID: 'yIso', borderDash: [2, 2] }
             ]
         },
@@ -559,7 +549,7 @@ function initChart() {
                 }
             },
             onClick: (e) => {
-                const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: false, axis: 'x' }, true);
+                const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
                 if (points.length) {
                     const firstPoint = points[0];
                     const datasetIndex = firstPoint.datasetIndex;
@@ -579,7 +569,7 @@ function initChart() {
                             if (isNaN(val)) return;
 
                             // Identify field
-                            // Datasets: 0:SYS, 1:DIA, 2:MEAN, 3:PULSE, 4:SpO2, 5:ETCO2, 6:BT, 7+:Fluid
+                            // Datasets: 0:SYS, 1:DIA, 2:MEAN, 3:PULSE, 4:SpO2, 5:ETCO2, 6:BT, 7:RR, 8:O2, 9:ISO, 10+:Fluid
                             if (datasetIndex === 0) vitalsData.systolic[index] = val;
                             else if (datasetIndex === 1) vitalsData.diastolic[index] = val;
                             else if (datasetIndex === 3) vitalsData.pulse[index] = val;
@@ -587,8 +577,9 @@ function initChart() {
                             else if (datasetIndex === 5) vitalsData.etco2[index] = val;
                             else if (datasetIndex === 6) vitalsData.bt[index] = val;
                             else if (datasetIndex === 7) vitalsData.rr[index] = val;
-                            else if (datasetIndex === 8) vitalsData.iso[index] = val;
-                            else if (datasetIndex >= 9) {
+                            else if (datasetIndex === 8) vitalsData.o2[index] = val;
+                            else if (datasetIndex === 9) vitalsData.iso[index] = val;
+                            else if (datasetIndex >= 10) {
                                 // If array element is null/undefined, create object
                                 if (!vitalsData.fluids[index]) {
                                     vitalsData.fluids[index] = { name: label, rate: val };
@@ -647,9 +638,10 @@ function logVitals() {
     const etco2 = document.getElementById('input-etco2').value;
     const bt = document.getElementById('input-bt').value;
     const rr = document.getElementById('input-rr').value;
+    const o2 = document.getElementById('input-o2').value;
     const iso = document.getElementById('input-iso').value;
 
-    if (sys || dia || pulse || spo2 || etco2 || bt || rr || iso) {
+    if (sys || dia || pulse || spo2 || etco2 || bt || rr || o2 || iso) {
         const lastIndex = vitalsData.times.length - 1;
         const lastTime = lastIndex >= 0 ? vitalsData.times[lastIndex] : null;
 
@@ -662,6 +654,7 @@ function logVitals() {
             if (etco2) vitalsData.etco2[lastIndex] = parseInt(etco2);
             if (bt) vitalsData.bt[lastIndex] = parseFloat(bt);
             if (rr) vitalsData.rr[lastIndex] = parseInt(rr);
+            if (o2) vitalsData.o2[lastIndex] = parseInt(o2);
             if (iso) vitalsData.iso[lastIndex] = parseFloat(iso);
 
             // Re-calc mean if needed
@@ -680,6 +673,7 @@ function logVitals() {
             vitalsData.etco2.push(etco2 ? parseInt(etco2) : null);
             vitalsData.bt.push(bt ? parseFloat(bt) : null);
             vitalsData.rr.push(rr ? parseInt(rr) : null);
+            vitalsData.o2.push(o2 ? parseInt(o2) : null);
             vitalsData.iso.push(iso ? parseFloat(iso) : null);
 
             // Ensure Fluids array stays in sync
@@ -710,7 +704,7 @@ function logVitals() {
         refreshChart();
         saveToLocal();
 
-        ['input-sys', 'input-dia', 'input-pulse', 'input-spo2', 'input-etco2', 'input-bt', 'input-rr', 'input-iso'].forEach(id => {
+        ['input-sys', 'input-dia', 'input-pulse', 'input-spo2', 'input-etco2', 'input-bt', 'input-rr', 'input-o2', 'input-iso'].forEach(id => {
             document.getElementById(id).value = '';
         });
 
@@ -731,6 +725,7 @@ function updateVitalDisplays() {
         'display-etco2': vitalsData.etco2[last],
         'display-bt': vitalsData.bt[last],
         'display-rr': vitalsData.rr[last],
+        'display-o2': vitalsData.o2[last],
         'display-iso': vitalsData.iso[last],
     };
     for (const [id, val] of Object.entries(map)) {
@@ -764,6 +759,7 @@ function updateVitalsHistoryTable() {
         <th>ETCO2</th>
         <th>BT</th>
         <th>RR</th>
+        <th>O2</th>
         <th>ISO %</th>
     `;
     uniqueFluids.forEach(name => {
@@ -794,6 +790,7 @@ function updateVitalsHistoryTable() {
             <td>${mkInput(vitalsData.etco2[i], 'etco2')}</td>
             <td>${mkInput(vitalsData.bt[i], 'bt')}</td>
             <td>${mkInput(vitalsData.rr[i], 'rr')}</td>
+            <td>${mkInput(vitalsData.o2[i], 'o2')}</td>
             <td>${mkInput(vitalsData.iso[i], 'iso')}</td>
         `;
 
