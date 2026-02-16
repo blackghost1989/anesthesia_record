@@ -14,14 +14,15 @@ const DRUG_OPTIONS = [
 
 const EPIDURAL_OPTIONS = ['Lidocaine', 'Bupivacaine', 'Ropivacaine'];
 
-const IVC_SITES = ['18G', '19G', '20G', '21G', '22G', '23G', '24G', '25G'];
+const IVC_SIZES = ['18G', '19G', '20G', '21G', '22G', '23G', '24G', '25G'];
+const IVC_SITE_LOCATIONS = ['LA', 'RA', 'LL', 'RL', 'TAIL', "Lt'ear", "Rt'ear"];
 
 const ROUTE_OPTIONS = ['IV', 'IM', 'SC'];
 const DOSE_UNITS = ['mg/kg', 'mcg/kg', 'mg/m^2', 'mcg/m^2', 'mg/animal', 'mcg/animal'];
 
 const FIELD_IDS = [
     'pet-name', 'animal-id', 'breed', 'date', 'weight', 'sex', 'anesthetist', 'surgeon', 'procedure',
-    'procedure-note', 'et-tube-size', 'intubation-time', 'extubation-time', 'ivc-site', 'bp-cuff-size',
+    'procedure-note', 'et-tube-size', 'intubation-time', 'extubation-time', 'ivc-size', 'ivc-site', 'bp-cuff-size',
     'age-y', 'age-m', 'setup-ventilator', 'setup-mask'
 ];
 
@@ -456,13 +457,22 @@ function populateSelects() {
         opt.value = i; opt.textContent = i;
         etSize.appendChild(opt);
     }
-    // IVC Site
-    const ivcSite = document.getElementById('ivc-site');
-    ivcSite.innerHTML = '<option value="">Select Size</option>';
-    IVC_SITES.forEach(site => {
+    // IVC Size
+    const ivcSizeSelect = document.getElementById('ivc-size');
+    ivcSizeSelect.innerHTML = '<option value="">Select Size</option>';
+    IVC_SIZES.forEach(size => {
         const opt = document.createElement('option');
-        opt.value = site; opt.textContent = site;
-        ivcSite.appendChild(opt);
+        opt.value = size; opt.textContent = size;
+        ivcSizeSelect.appendChild(opt);
+    });
+
+    // IVC Site
+    const ivcSiteSelect = document.getElementById('ivc-site');
+    ivcSiteSelect.innerHTML = '<option value="">Select Site</option>';
+    IVC_SITE_LOCATIONS.forEach(loc => {
+        const opt = document.createElement('option');
+        opt.value = loc; opt.textContent = loc;
+        ivcSiteSelect.appendChild(opt);
     });
 }
 
